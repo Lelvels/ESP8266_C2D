@@ -52,8 +52,10 @@ static uint32_t telemetry_send_count = 0;
 
 int mess_type = 0;
 int parking_slot_number = 0;
-bool gate = true;
 int btnState = LOW;
+long rfid_code_false = 223366890;
+long rfid_code_true = 22336688;
+long rfid_code = rfid_code_true;
 
 static DynamicJsonDocument doc(200);
 
@@ -109,7 +111,10 @@ void increaseIndex(){
   else 
     parking_slot_number = 0;
 
-  gate = !gate;
+  if(rfid_code == rfid_code_false)
+    rfid_code = rfid_code_true;
+  else
+    rfid_code = rfid_code_false;
 
   if(mess_type < 2)
     mess_type = mess_type + 1;
@@ -313,14 +318,11 @@ static char* getTelemetryPayload(int cond)
   {
     case RFID_IN_NUMBER:
     {
-      long rfid_code = 22336688;
       doc.clear();
       doc["Method"] = METHOD_RFID_IN;
-      doc["Gate"] = gate;
       doc["RfidCode"] = rfid_code;
       doc["ParkingAreaId"] = PARKING_AREA_ID;
       doc["Id"] = telemetry_send_count;
-      telemetry_send_count = telemetry_send_count + 1;
       serializeJson(doc, telemetry_payload);
       break;
     }
@@ -353,7 +355,6 @@ static char* getTelemetryPayload(int cond)
         default:
           break;
       }
-      telemetry_send_count = telemetry_send_count + 1;
       serializeJson(doc, telemetry_payload);
       break;
     }
@@ -386,7 +387,6 @@ static char* getTelemetryPayload(int cond)
         default:
           break;
       }
-      telemetry_send_count = telemetry_send_count + 1;
       serializeJson(doc, telemetry_payload);
       break;
     }
@@ -403,7 +403,7 @@ static char* getTelemetryPayload(int cond)
   Serial.print("[+] Payload generate: ");
   Serial.printf((char*)telemetry_payload);
   Serial.println();
-
+  telemetry_send_count = telemetry_send_count + 1;
   return (char*)telemetry_payload;
 }
 

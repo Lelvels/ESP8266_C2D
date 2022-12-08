@@ -11,7 +11,7 @@
 #define IOT_CONFIG_DEVICE_KEY "g29a+VVbOkxDzhHPQBTMrKIy65gbOl2CLoRQuVrOkiU="
 
 // Publish 1 message every 2 seconds
-#define TELEMETRY_FREQUENCY_MILLISECS 6000
+#define TELEMETRY_FREQUENCY_MILLISECS 3000
 
 //IDs
 static char PARKING_AREA_ID[] = "d934def1-82fc-4fd3-a56f-4db4aab8c6eb";
